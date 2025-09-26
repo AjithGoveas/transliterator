@@ -1,4 +1,5 @@
 # aksharamukha_server
+import os
 from flask import Flask, request
 from aksharamukha import transliterate
 
@@ -17,4 +18,5 @@ def translit():
 	return {'result': result}
 
 if __name__ == '__main__':
-	app.run()
+    port = int(os.environ.get('PORT', 5000))  # Render sets PORT env variable
+    app.run(host='0.0.0.0', port=port)
