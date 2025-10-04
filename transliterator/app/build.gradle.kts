@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -57,7 +59,12 @@ dependencies {
     implementation(libs.androidx.compose.material.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-//    CameraX dependencies
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    // CameraX dependencies
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
@@ -68,7 +75,7 @@ dependencies {
     implementation(libs.google.mlkit.text.recognition)
     implementation(libs.google.mlkit.text.recognition.devanagari)
 
-//    OkHttp
+    // OkHttp
     implementation(libs.okhttp)
 
     testImplementation(libs.junit)
@@ -77,5 +84,4 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
-}
+    debugImplementation(libs.androidx.compose.ui.test.manifest)}

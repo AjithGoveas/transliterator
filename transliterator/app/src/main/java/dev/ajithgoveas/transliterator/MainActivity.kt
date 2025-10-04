@@ -13,11 +13,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import dev.ajithgoveas.transliterator.ui.MainScreen
 import dev.ajithgoveas.transliterator.ui.theme.TransliteratorTheme
 import dev.ajithgoveas.transliterator.viewmodel.TranslitViewModel
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +31,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TransliteratorTheme {
-                val viewModel: TranslitViewModel = viewModel()
+                val viewModel: TranslitViewModel = hiltViewModel()
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(modifier = Modifier.padding(innerPadding)) {
-                        MainScreen(modifier = Modifier.padding(innerPadding), viewModel)
-                    }
+                   Box { MainScreen(modifier = Modifier.padding(innerPadding), viewModel) }
                 }
             }
         }

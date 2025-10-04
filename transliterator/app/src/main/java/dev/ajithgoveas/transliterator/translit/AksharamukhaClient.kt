@@ -1,47 +1,59 @@
 package dev.ajithgoveas.transliterator.translit
 
-import okhttp3.Call
-import okhttp3.Callback
+import jakarta.inject.Inject
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
-import okio.IOException
 import org.json.JSONObject
+import java.io.IOException
 
-object AksharamukhaClient {
+class AksharamukhaClient @Inject constructor() {
+
+    private val client = OkHttpClient()
+    private val jsonMediaType = "application/json; charset=utf-8".toMediaType()
+
+    /**
+     * Transliterate text from source script to target script using API.
+     *
+     * @param source Source script name (e.g., "Devanagari")
+     * @param target Target script name (e.g., "Kannada")
+     * @param text Text to transliterate
+     * @param callback Callback with the transliterated result or error message
+     */
     fun transliterate(source: String, target: String, text: String, callback: (String) -> Unit) {
-        val client = OkHttpClient()
-        val json = JSONObject().apply {
+        // Build JSON body
+        val requestBody = JSONObject().apply {
             put("source", source)
             put("target", target)
             put("text", text)
-        }
+        }.toString().toRequestBody(jsonMediaType)
 
-////        Web API
-//        val web_request = Request.Builder()
-//            .url("http://aksharamukha-plugin.appspot.com/api/public?source=${source}&target=${target}&text=${text}")
-//            .build()
-
-//        Custom API
-        val body = json.toString().toRequestBody("application/json; charset=utf-8".toMediaType())
+        // Build POST request
         val request = Request.Builder()
-            .url("http://localhost:5000/transliterate")
-            .post(body)
+            .url("https://transliterator.onrender.com/transliterate")
+            .post(requestBody)
             .build()
 
-        client.newCall(request = request).enqueue(object : Callback {
+        // Execute request asynchronously
+        client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                callback("Error: ${e.message}")
+                callback("Error: ${e.message ?: "Unknown error"}")
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-                    val result = JSONObject(response.body?.string() ?: "").getString("result")
+                try {
+                    val responseBody = response.body.string()
+                    if (!response.isSuccessful || responseBody.isEmpty()) {
+                        callback("Error: ${response.code}")
+                        return
+                    }
+
+                    val result = JSONObject(responseBody).optString("result", "No result")
                     callback(result)
-                } else {
-                    callback("Error: ${response.code}")
+                } catch (e: Exception) {
+                    callback("Error parsing response: ${e.message}")
+                } finally {
+                    response.close()
                 }
             }
         })

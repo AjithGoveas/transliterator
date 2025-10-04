@@ -14,7 +14,6 @@ local.properties
 .idea/
 *.iws
 *.ipr
-*.iml
 
 # Android Studio
 captures/

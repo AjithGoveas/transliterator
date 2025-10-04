@@ -1,6 +1,7 @@
-package dev.ajithgoveas.transliterator.ui
+package dev.ajithgoveas.transliterator.ui.components
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -13,19 +14,22 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TranslitBottomSheet(
-    modifier: Modifier = Modifier,
-    ocr_text: String,
+    ocrText: String,
     result: String,
-    expanded: Boolean,
     onDismiss: () -> Unit
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(expanded))
+        sheetState = sheetState)
     {
-        Text("Original Text", style = MaterialTheme.typography.titleLarge)
-        Text(ocr_text, modifier = Modifier.padding(16.dp))
-        Text("Transliterated Text", style = MaterialTheme.typography.titleLarge)
-        Text(result, modifier = Modifier.padding(16.dp))
+        LazyColumn {
+            item {
+                Text("Original Text", style = MaterialTheme.typography.titleLarge)
+                Text(ocrText, modifier = Modifier.padding(16.dp))
+                Text("Transliterated Text", style = MaterialTheme.typography.titleLarge)
+                Text(result, modifier = Modifier.padding(16.dp))
+            }
+        }
     }
 }

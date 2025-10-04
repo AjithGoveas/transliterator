@@ -1,32 +1,22 @@
 package dev.ajithgoveas.transliterator.ui
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import java.io.File
+import dev.ajithgoveas.transliterator.viewmodel.TranslitViewModel
 
+/*
 @Composable
 fun CameraPreview(
     onImageCaptured: (Bitmap) -> Unit
@@ -87,5 +77,53 @@ fun CameraPreview(
                     )
                 }
         )
+    }
+}
+ */
+
+@Composable
+fun CameraPreview(viewModel: TranslitViewModel) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+
+    val imageCapture = remember { ImageCapture.Builder().build() }
+    viewModel.setImageCapture(imageCapture) // expose capture
+
+    val cameraSelector = remember { CameraSelector.DEFAULT_BACK_CAMERA }
+    val previewView = remember { PreviewView(context) }
+    val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { previewView }
+        )
+    }
+
+    LaunchedEffect(cameraProviderFuture) {
+        val cameraProvider = cameraProviderFuture.get()
+        val preview = Preview.Builder().build().also {
+            it.surfaceProvider = previewView.surfaceProvider
+        }
+
+        try {
+            cameraProvider.unbindAll()
+            val camera = cameraProvider.bindToLifecycle(
+                lifecycleOwner,
+                cameraSelector,
+                preview,
+                imageCapture
+            )
+
+            // ✅ Pass lifecycleOwner so zoomState.observe is lifecycle-aware
+            viewModel.setCameraControl(
+                control = camera.cameraControl,
+                info = camera.cameraInfo,
+                lifecycleOwner = lifecycleOwner
+            )
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
