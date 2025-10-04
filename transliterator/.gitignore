@@ -1,15 +1,94 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Android/IntelliJ/IDEA/Gradle/Kotlin ignores
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration files
 local.properties
+/.idea/
+*.iml
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.ipr
+*.iml
+
+# Android Studio
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.ap_
+*.dex
+*.class
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Kotlin
+*.kotlin_module
+
+# Log files
+*.log
+
+# Crashlytics/Fabric
+crashlytics-build.properties
+
+# NDK
+obj/
+*.so
+
+# Misc
+*.swp
+*.swo
+*.tmp
+*.orig
+*.bak
+
+# Exclude test result files
+test-results/
+outputs/
+
+# Exclude generated Proguard files
+proguard/
+
+# Exclude signing files
+*.jks
+*.keystore
+
+# Exclude local Maven repo
+/.m2/
+
+# Exclude fastlane metadata
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+
+# Exclude Google Services config
+google-services.json
+app/google-services.json
+
+# Exclude Firebase config
+firebase.json
+
+# Exclude local environment files
+.env
+.env.*
+
+# Exclude coverage reports
+coverage/
+*.ec
+
+# Exclude Lint/inspection reports
+lint/
+lint-results*.xml
+lint-results*.html
+
+# Exclude IDE-specific files
+.vscode/
+*.sublime-workspace
+*.sublime-project
