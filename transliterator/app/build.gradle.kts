@@ -44,6 +44,7 @@ android {
     buildFeatures {
         compose = true
     }
+    ndkVersion = "29.0.14033849 rc4"
 }
 
 dependencies {
@@ -77,6 +78,9 @@ dependencies {
 
     // OkHttp
     implementation(libs.okhttp)
+
+    // Tesseract4Android
+    implementation(libs.tesseract4Android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
