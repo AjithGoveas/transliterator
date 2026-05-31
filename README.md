@@ -15,7 +15,7 @@ The project bridges on-device camera capturing and script recognition with a rem
 
 ```mermaid
 graph TD
-    subgraph Android App (transliterator)
+    subgraph android_app ["Android App (transliterator)"]
         A[CameraX Live Feed] --> B[Draggable Crop Overlay]
         B -->|User Triggers Capture| C[Google ML Kit Devanagari OCR]
         C -->|Devanagari String| D[AksharamukhaClient OkHttp]
@@ -24,15 +24,15 @@ graph TD
         E -->|Renders State| F[Bottom Sheet UI]
     end
 
-    subgraph Backend Service (transliterator-py)
+    subgraph backend_service ["Backend Service (transliterator-py)"]
         D -->|POST /transliterate| G[FastAPI Router]
         G -->|Payload: source, target, text| H[Aksharamukha Library]
         H -->|Script Transliteration Engine| G
         G -->|JSON Response| D
     end
     
-    style Android App (transliterator) fill:#f5f7ff,stroke:#5c6bc0,stroke-width:2px;
-    style Backend Service (transliterator-py) fill:#e0f2f1,stroke:#009688,stroke-width:2px;
+    style android_app fill:#f5f7ff,stroke:#5c6bc0,stroke-width:2px;
+    style backend_service fill:#e0f2f1,stroke:#009688,stroke-width:2px;
 ```
 
 ---
